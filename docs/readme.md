@@ -175,6 +175,10 @@ EOF
 chmod +x zapret_manager.sh
 ```
 
+```sh
+chmod +x /opt/zapret/init.d/sysv/zapret
+sed -i 's/\r$//' /opt/zapret/init.d/sysv/zapret
+```
 ### 4. Yönetim scriptini çalıştırın
 
 ```sh
