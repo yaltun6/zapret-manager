@@ -74,11 +74,11 @@ cd zapret
 Terminalde aşağıdaki komutu çalıştırarak dosyayı oluşturabilirsiniz:
 
 ```sh
-cat > zapret_manager.sh << 'EOF'
 #!/bin/sh
 
 ZAPRET_DIR="/opt/zapret"
 BACKUP_FILE="/opt/zapret_backup.tar.gz"
+INIT_SCRIPT="$ZAPRET_DIR/init.d/sysv/zapret"
 
 while true; do
   echo "===== ZAPRET YÖNETİCİ ====="
@@ -105,6 +105,7 @@ while true; do
         echo ">> Zapret zaten kurulmuş."
       fi
       ;;
+
     2)
       if [ -d "$ZAPRET_DIR" ]; then
         echo ">> Yedek alınıyor..."
@@ -114,6 +115,7 @@ while true; do
         echo ">> Zapret bulunamadı!"
       fi
       ;;
+
     3)
       if [ -f "$BACKUP_FILE" ]; then
         echo ">> Geri yükleniyor..."
@@ -124,6 +126,7 @@ while true; do
         echo ">> Yedek dosyası bulunamadı!"
       fi
       ;;
+
     4)
       if [ -d "$ZAPRET_DIR" ]; then
         echo ">> Zapret kaldırılıyor..."
@@ -133,22 +136,29 @@ while true; do
         echo ">> Zapret bulunamadı!"
       fi
       ;;
+
     5)
-      if [ -f "$ZAPRET_DIR/init.d/sysv/zapret" ]; then
+      if [ -f "$INIT_SCRIPT" ]; then
         echo ">> Zapret başlatılıyor..."
-        "$ZAPRET_DIR"/init.d/sysv/zapret start
+        chmod +x "$INIT_SCRIPT"
+        sed -i 's/\r$//' "$INIT_SCRIPT"
+        "$INIT_SCRIPT" start
       else
         echo ">> Başlatma betiği bulunamadı!"
       fi
       ;;
+
     6)
-      if [ -f "$ZAPRET_DIR/init.d/sysv/zapret" ]; then
+      if [ -f "$INIT_SCRIPT" ]; then
         echo ">> Zapret durduruluyor..."
-        "$ZAPRET_DIR"/init.d/sysv/zapret stop
+        chmod +x "$INIT_SCRIPT"
+        sed -i 's/\r$//' "$INIT_SCRIPT"
+        "$INIT_SCRIPT" stop
       else
         echo ">> Durdurma betiği bulunamadı!"
       fi
       ;;
+
     7)
       if [ -f "$ZAPRET_DIR/config" ]; then
         echo ">> Config düzenleniyor..."
@@ -157,16 +167,18 @@ while true; do
         echo ">> Config dosyası bulunamadı!"
       fi
       ;;
+
     8)
       echo "Çıkılıyor..."
       exit 0
       ;;
+
     *)
       echo "Geçersiz seçim!"
       ;;
   esac
 done
-EOF
+
 ```
 
 ### 3. Dosyaya çalıştırma izni verin
@@ -175,15 +187,26 @@ EOF
 chmod +x zapret_manager.sh
 ```
 
-```sh
-chmod +x /opt/zapret/init.d/sysv/zapret
-sed -i 's/\r$//' /opt/zapret/init.d/sysv/zapret
-```
 ### 4. Yönetim scriptini çalıştırın
 
 ```sh
 ./zapret_manager.sh
 ```
+
+`Zapret başlat` seçeneğini kullandığınızda `Permission denied` hatası alırsanız aşağıdaki komutları çalıştırın:
+
+```sh
+chmod +x /opt/zapret/init.d/sysv/zapret
+sed -i 's/\r$//' /opt/zapret/init.d/sysv/zapret
+```
+
+Sonra tekrar başlatabilirsiniz:
+
+```sh
+/opt/zapret/init.d/sysv/zapret start
+```
+
+---
 
 Bu script sayesinde Zapret’i kurabilir, yedek alabilir, geri yükleyebilir, başlatıp durdurabilir ve config dosyasını düzenleyebilirsiniz.
 
