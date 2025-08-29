@@ -61,15 +61,19 @@ Entware kurulumu tamamlandı.
 
 ## 3️⃣ Zapret Yönetim Betiği Kurulumu
 
-1. /opt dizinine geçin ve zapret dizinini oluşturun
+### 1. /opt dizinine geçin ve zapret dizinini oluşturun
+
+```sh
 cd /opt
 mkdir -p zapret
 cd zapret
+```
 
-2. zapret_manager.sh dosyasını oluşturun
+### 2. `zapret_manager.sh` dosyasını oluşturun
 
 Terminalde aşağıdaki komutu çalıştırarak dosyayı oluşturabilirsiniz:
 
+```sh
 cat > zapret_manager.sh << 'EOF'
 #!/bin/sh
 
@@ -163,15 +167,22 @@ while true; do
   esac
 done
 EOF
+```
 
-3. Dosyaya çalıştırma izni verin
+### 3. Dosyaya çalıştırma izni verin
+
+```sh
 chmod +x zapret_manager.sh
+```
 
-4. Yönetim scriptini çalıştırın
+### 4. Yönetim scriptini çalıştırın
+
+```sh
 ./zapret_manager.sh
-
+```
 
 Bu script sayesinde Zapret’i kurabilir, yedek alabilir, geri yükleyebilir, başlatıp durdurabilir ve config dosyasını düzenleyebilirsiniz.
+
 
 ## 4️⃣ Zapret Kurulumu
 
