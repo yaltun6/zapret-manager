@@ -191,7 +191,9 @@ chmod +x zapret_manager.sh
 ./zapret_manager.sh
 ```
 
-⚠️ Eğer **“Permission denied”** hatası alırsanız şu komutları çalıştırın:
+⚠️ Eğer **“Permission denied”** veya Zapret zaten kurulmuş hatası alırsanız şu komutları çalıştırın:
+
+Menüden zapreti kaldırı seçip, zapreti kur seçeneğini seçin.
 
 ```bash
 chmod +x /opt/zapret/init.d/sysv/zapret
