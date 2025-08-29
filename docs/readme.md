@@ -64,8 +64,8 @@ Entware kurulumu tamamlandı.
 1. Betiği indirip çalıştırılabilir yapın:
 
 ```sh
-mkdir -p /opt
-curl -L https://raw.githubusercontent.com/yaltun6/zapret-manager/main/zapret_manager.sh -o /opt/zapret_manager.sh
+ cd /opt
+git clone https://github.com/yaltun6/zapret-manager.git zapret
 chmod +x /opt/zapret_manager.sh
 ```
 
