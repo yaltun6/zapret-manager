@@ -1,0 +1,2 @@
+NFQWS_OPT="--dpi-desync=fake --dpi-desync-ttl=4 --dpi-desync-fooling=badsum --hostspell=hoSt --hostlist-domains=/opt/zapret/nfq/hosts.txt"
+
