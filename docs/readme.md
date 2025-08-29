@@ -181,34 +181,149 @@ done
 
 ```
 
-### 3. Dosyaya çalıştırma izni verin
+## 3️⃣ Zapret Yönetim Betiği Kurulumu
 
-```sh
+1. **/opt dizinine geçin ve zapret dizinini oluşturun**
+
+```bash
+cd /opt
+mkdir -p zapret
+cd zapret
+```
+
+2. **zapret\_manager.sh dosyasını oluşturun**
+   Terminalde aşağıdaki komutu çalıştırarak dosyayı oluşturabilirsiniz:
+
+```bash
+cat << 'EOF' > zapret_manager.sh
+#!/bin/sh
+
+ZAPRET_DIR="/opt/zapret"
+BACKUP_FILE="/opt/zapret_backup.tar.gz"
+INIT_SCRIPT="$ZAPRET_DIR/init.d/sysv/zapret"
+
+while true; do
+  echo "===== ZAPRET YÖNETİCİ ====="
+  echo "1) Zapret kur (GitHub)"
+  echo "2) Zapret yedekle"
+  echo "3) Zapret geri yükle"
+  echo "4) Zapret kaldır"
+  echo "5) Zapret başlat"
+  echo "6) Zapret durdur"
+  echo "7) Config düzenle (TTL/hostspell)"
+  echo "8) Çıkış"
+  echo -n "Seçiminiz: "
+  read secim
+
+  case "$secim" in
+    1)
+      echo ">> Zapret kuruluyor..."
+      cd /opt
+      if [ ! -d "$ZAPRET_DIR" ]; then
+        git clone https://github.com/yaltun6/zapret-manager.git zapret
+        chmod +x "$ZAPRET_DIR"/zapret_manager.sh 2>/dev/null
+        echo ">> Kurulum tamamlandı."
+      else
+        echo ">> Zapret zaten kurulmuş."
+      fi
+      ;;
+
+    2)
+      if [ -d "$ZAPRET_DIR" ]; then
+        echo ">> Yedek alınıyor..."
+        tar -czf "$BACKUP_FILE" "$ZAPRET_DIR"
+        echo ">> Yedek: $BACKUP_FILE"
+      else
+        echo ">> Zapret bulunamadı!"
+      fi
+      ;;
+
+    3)
+      if [ -f "$BACKUP_FILE" ]; then
+        echo ">> Geri yükleniyor..."
+        rm -rf "$ZAPRET_DIR"
+        tar -xzf "$BACKUP_FILE" -C /opt
+        echo ">> Geri yükleme tamamlandı."
+      else
+        echo ">> Yedek dosyası bulunamadı!"
+      fi
+      ;;
+
+    4)
+      if [ -d "$ZAPRET_DIR" ]; then
+        echo ">> Zapret kaldırılıyor..."
+        rm -rf "$ZAPRET_DIR"
+        echo ">> Kaldırıldı."
+      else
+        echo ">> Zapret bulunamadı!"
+      fi
+      ;;
+
+    5)
+      if [ -f "$INIT_SCRIPT" ]; then
+        echo ">> Zapret başlatılıyor..."
+        chmod +x "$INIT_SCRIPT"
+        sed -i 's/\r$//' "$INIT_SCRIPT"
+        "$INIT_SCRIPT" start
+      else
+        echo ">> Başlatma betiği bulunamadı!"
+      fi
+      ;;
+
+    6)
+      if [ -f "$INIT_SCRIPT" ]; then
+        echo ">> Zapret durduruluyor..."
+        chmod +x "$INIT_SCRIPT"
+        sed -i 's/\r$//' "$INIT_SCRIPT"
+        "$INIT_SCRIPT" stop
+      else
+        echo ">> Durdurma betiği bulunamadı!"
+      fi
+      ;;
+
+    7)
+      if [ -f "$ZAPRET_DIR/config" ]; then
+        echo ">> Config düzenleniyor..."
+        nano "$ZAPRET_DIR/config"
+      else
+        echo ">> Config dosyası bulunamadı!"
+      fi
+      ;;
+
+    8)
+      echo "Çıkılıyor..."
+      exit 0
+      ;;
+
+    *)
+      echo "Geçersiz seçim!"
+      ;;
+  esac
+done
+EOF
+```
+
+3. **Dosyaya çalıştırma izni verin**
+
+```bash
 chmod +x zapret_manager.sh
 ```
 
-### 4. Yönetim scriptini çalıştırın
+4. **Yönetim scriptini çalıştırın**
 
-```sh
+```bash
 ./zapret_manager.sh
 ```
 
-`Zapret başlat` seçeneğini kullandığınızda `Permission denied` hatası alırsanız aşağıdaki komutları çalıştırın:
+⚠️ Eğer **“Permission denied”** hatası alırsanız şu komutları çalıştırın:
 
-```sh
+```bash
 chmod +x /opt/zapret/init.d/sysv/zapret
 sed -i 's/\r$//' /opt/zapret/init.d/sysv/zapret
-```
-
-Sonra tekrar başlatabilirsiniz:
-
-```sh
 /opt/zapret/init.d/sysv/zapret start
 ```
 
 ---
-
-Bu script sayesinde Zapret’i kurabilir, yedek alabilir, geri yükleyebilir, başlatıp durdurabilir ve config dosyasını düzenleyebilirsiniz.
 
 
 ## 4️⃣ Zapret Kurulumu
